@@ -1,0 +1,193 @@
+//------------------------------------------------
+// file.........: graph001.h
+// description..: graph using adjacent list - studies
+//                using DepthFirstSeard & BreadthFirstSearch
+// version......: v1
+// author.......: Antonio Fernandes
+//------------------------------------------------
+
+#include <iostream>  	// std::cout, std::endl
+
+#ifndef _graph001_h_
+#define _graph001_h_
+
+#include <list>
+#include <map>
+#include <stack>
+#include <algorithm>
+#include <iostream>
+#include <string>
+
+// Assumption: ItemType is a type for 
+// which the operators "<" and "==" are 
+// defined 
+// --either an appropriate built-in type or
+// a class that overloads these operators.
+typedef std::string VertexItemType;
+typedef int WeightType;
+
+class EdgeNode
+{
+
+  VertexItemType mToVertex;
+  WeightType mWeight;    
+
+public:
+
+  EdgeNode()
+  {
+    mToVertex="";
+    mWeight=-1;
+  }
+
+  EdgeNode(VertexItemType toVertex, WeightType weight)
+  {
+    mToVertex=toVertex;
+    mWeight=weight;
+  }
+
+  ~EdgeNode()
+  {
+    //std::cout <<" [in ~EdgeNode()]";
+  }
+
+  EdgeNode(const EdgeNode & other)
+  {
+    mToVertex=other.mToVertex;
+    mWeight=other.mWeight;
+  }
+
+  EdgeNode & operator=(const EdgeNode & other)
+  {
+    if(this != &other)
+    {
+
+      // TODO: check this
+      mToVertex=other.mToVertex;
+      mWeight=other.mWeight;
+    }
+    return *this;
+  }
+
+  VertexItemType GetToVertex()
+  {
+    return mToVertex;
+  }
+
+  WeightType GetWeight()
+  {
+    return mWeight;
+  }
+
+  friend std::ostream & operator<<(std::ostream & out, const EdgeNode & edge );
+};
+
+
+//template<class VertexType>
+// Assumption: VertexType is a type for which the "=",
+// "==", and "<<" operators are defined.
+class GraphType
+{
+public:
+  GraphType()
+  {
+  }
+
+  //GraphType(int maxV);
+  ~GraphType()
+  {
+    //std::cout <<"in ~GraphType()" <<std::endl;
+
+    for(auto it=mGraph.begin(); it!=mGraph.end(); ++it)
+    {
+      //std::cout << "destructing - graph[" << it->first << "]:" << std::endl;
+
+      auto edgeList = it->second;
+      for(const auto &edge : *edgeList)
+      {
+        //std::cout << "..deleting edge -> ";
+        //std::cout << *edge;
+        delete edge;
+        //std::cout << std::endl;
+      }
+      //std::cout << std::endl;
+    }
+  }
+  
+  //void MakeEmpty();
+  //bool IsEmpty() const;
+  //bool IsFull() const;
+  
+  void AddVertex(VertexItemType vertex)
+  {
+    //std::list<EdgeNode> * l = new std::list<EdgeNode>{};
+    //auto actualList = mGraph[vertex];
+
+    //mGraph[vertex] = std::ref(std::list<EdgeNode>{});
+    //mGraph[vertex] = nullptr;
+
+    std::list<EdgeNode *> * l = new std::list<EdgeNode *>{};
+    mGraph[vertex] = l;
+    //mGraph.insert((std::make_pair(vertex, std::list<EdgeNode *>{}));
+    //mGraph[vertex] = std::list<EdgeNode>{};
+
+  }
+
+  void AddEdge(VertexItemType fromVertex, VertexItemType toVertex, WeightType weight)  
+  {
+    if (mGraph.count(fromVertex) != 0)
+    {
+      auto actualList = mGraph[fromVertex];
+      actualList->push_back((new EdgeNode{toVertex, weight}));
+    }
+  }
+
+  GraphType(const GraphType & other)
+  {
+      // TODO: check this
+      mGraph = other.mGraph;
+  }
+
+  GraphType & operator=(const GraphType & other)
+  {
+    if(this != &other)
+    {
+
+      // TODO: check this
+      mGraph = other.mGraph;
+    }
+    return *this;
+  }
+
+  friend std::ostream & operator<<(std::ostream & out, const GraphType & graph );
+
+  void DepthFirstSearch(
+    const VertexItemType & startVertex, 
+    const VertexItemType & searchedVertex);
+
+  void DepthFirstSearchAll(
+    const VertexItemType & startVertex, 
+    const VertexItemType & searchedVertex);
+
+  //void BreadFirstSearch(
+    //const VertexItemType & startVertex, 
+    //const VertexItemType & searchedVertex) const;
+  
+  //int GetWeight(VertexType, VertexType);
+  //void GetToVertices(VertexType, QueType<VertexType>&);
+  //void ClearMarks();
+  //void MarkVertex(VertexType);
+  //bool IsMarked(VertexType);
+private:
+
+  void AppendAdjacentNodes(
+    const VertexItemType & vertex, 
+    std::stack<VertexItemType> & stack);
+
+  bool HasAdjacentNodes(
+  const VertexItemType & vertex) const;
+
+  std::map<std::string, std::list<EdgeNode *>*> mGraph;
+};
+
+#endif

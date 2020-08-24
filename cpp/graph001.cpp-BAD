@@ -1,0 +1,241 @@
+//------------------------------------------------
+// file.........: graph001.cpp
+// description..: graphs using adjacent list - studies
+//                using DepthFirstSeard & BreadthFirstSearch
+// version......: v1
+// author.......: Antonio Fernandes
+//------------------------------------------------
+
+#include <iostream>
+#include <string>
+#include <stdexcept>
+#include <cassert>
+
+#include "graph001.h"
+#include <iterator>
+
+using namespace std;
+
+/*
+------------------------------------------
+*/
+std::ostream & operator<<(std::ostream & out, const EdgeNode & edge )
+{
+  out << "-> mToVertex=" << edge.mToVertex << "; mWeight=" << edge.mWeight << endl;
+  return out;
+}
+
+/*
+------------------------------------------
+*/
+std::ostream & operator<<(std::ostream & out, const GraphType & graph )
+{
+  out << endl;
+  out << ">>>>>GraphType content:" << endl;
+
+/*
+  for (const auto &p : graph.mGraph) 
+  {
+    out << "graph[" << p.first << "] = " << p.second << '\n';
+  }
+*/
+
+  for(auto it=graph.mGraph.begin(); it!=graph.mGraph.end(); ++it)
+  {
+    //out << "graph[" << it->first << "] = " << &(it->second) << '\n';
+    out << endl;
+    out << "graph[" << it->first << "]:" << endl;
+
+    // list all edges linked to this edge
+    std::list<EdgeNode *> * edgeList = it->second;
+
+    for(const auto &edge : *edgeList)
+    {
+      out << *edge;
+    }
+  }
+
+  out << endl;
+
+  return out;
+}
+
+/*
+------------------------------------------
+*/
+bool GraphType::HasAdjacentNodes(
+  const VertexItemType & vertex) const
+{
+  return (mGraph.count(vertex) != 0);
+}
+
+/*
+------------------------------------------
+*/
+void GraphType::AppendAdjacentNodes(
+  const VertexItemType & vertex, 
+  std::stack<VertexItemType> & stack)
+{
+    if (mGraph.count(vertex) != 0)
+    {
+      //auto & edgeList = mGraph["AAAAA"];
+      //std::list<EdgeNode *> * edgeList = mGraph[vertex];
+      //std::list<EdgeNode *>* edgeList =  mGraph[vertex];
+      auto edgeList = mGraph[vertex];
+      
+      for(auto edge : *edgeList)
+      {
+        stack.push(edge->GetToVertex());
+      }
+    }
+}
+
+//VIP: TODO ????????? FIX CODE BELOW
+/*
+------------------------------------------
+*/
+void GraphType::DepthFirstSearch(
+  const VertexItemType & startVertex, 
+  const VertexItemType & searchedVertex)
+{
+  bool foundIt=false;
+
+  std::stack<VertexItemType> stack{};
+  stack.push(startVertex);
+
+  do
+  {
+    auto vertex = stack.top();
+    stack.pop();
+
+    if (vertex == searchedVertex)
+    {
+      cout << vertex << " ";
+      foundIt=true;
+    }
+    else
+    {
+      cout << vertex << " ";
+      AppendAdjacentNodes(vertex, stack);
+    }
+  }
+  while (!stack.empty() && foundIt==false);  
+
+  if (foundIt)
+  {
+    cout << "item found in the graph" << endl;
+  }
+  else
+  {
+    cout << "item NOT found in the graph" << endl;
+  }
+}
+
+//VIP: TODO ????????? FIX CODE BELOW
+/*
+------------------------------------------
+*/
+void GraphType::DepthFirstSearchAll(
+  const VertexItemType & startVertex, 
+  const VertexItemType & searchedVertex)
+{
+  std::string path="";
+
+  std::stack<VertexItemType> stack{};
+  stack.push(startVertex);
+
+  do
+  {
+    auto vertex = stack.top();
+    stack.pop();
+
+    if (vertex == searchedVertex)
+    {
+      path += (vertex + " ") ;
+      cout << path << endl;
+      path="";
+    }
+    else
+    {
+      if (HasAdjacentNodes(vertex))
+      {
+        path += (vertex + " ") ;
+        AppendAdjacentNodes(vertex, stack);
+      }
+      else
+      {
+        path="";
+      }
+    }
+  }
+  while (!stack.empty());  
+}
+
+/*
+------------------------------------------
+*/
+int main() 
+{
+  {
+    GraphType g{};
+    VertexItemType va{"AA"};
+    VertexItemType vb{"BB"};
+    VertexItemType vc{"CC"};
+    VertexItemType vd{"DD"};
+    VertexItemType ve{"EE"};
+    VertexItemType vf{"FF"};
+    VertexItemType vg{"GG"};
+    VertexItemType vh{"HH"};
+    VertexItemType vi{"II"};
+
+    g.AddVertex(va);
+    g.AddVertex(vb);
+    g.AddVertex(vc);
+    g.AddVertex(vd);
+    g.AddVertex(ve);
+    g.AddVertex(vf);
+    g.AddVertex(vg);
+    g.AddVertex(vh);
+    g.AddVertex(vi);
+
+
+    g.AddEdge(va, vb, 100);
+    g.AddEdge(va, vc, 101);
+    g.AddEdge(va, vd, 102);
+
+    g.AddEdge(vb, ve, 200);
+    g.AddEdge(vb, vf, 201);
+    g.AddEdge(vc, vg, 202);
+    g.AddEdge(vd, vg, 203);
+
+    g.AddEdge(ve, vi, 300);
+    g.AddEdge(vg, vf, 301);
+
+    g.AddEdge(vi, vh, 400);
+
+    cout << g;
+
+    VertexItemType startingAt{"AA"};
+    VertexItemType searchingFor{"HH"};
+    cout << endl;
+    cout << "___________________________" << endl;
+    cout << ">>>>> DepthFirstSearch" << endl;
+    cout << "..startingAt=" << startingAt << " - searchingFor=" << searchingFor << endl;
+    cout << "..result:" << endl;
+    g.DepthFirstSearch(startingAt, searchingFor);
+    cout << endl;
+
+/*
+    cout << endl;
+    cout << "___________________________" << endl;
+    cout << ">>>>> DepthFirstSeard" << endl;
+    cout << "..startingAt=" << startingAt << " - searchingFor=" << searchingFor << endl;
+    cout << "..result:" << endl;
+    g.DepthFirstSearchAll(startingAt, searchingFor);
+    cout << endl;
+*/
+
+  }
+
+  return 0;
+} 
