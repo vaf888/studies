@@ -18,6 +18,7 @@ class Base
     public:
     virtual ~Base() 
     {
+        // tests only !!!!!!!!!!!
         cout << "Base Destructor\n"; 
     }
 };
