@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 using namespace std;
 
@@ -27,6 +28,14 @@ public:
 	//~IntRateCalculator();
 
 	double SinglePeriode(double value);
+
+	//helper function
+	bool CompareFloat(double x, double y, double epsilon = 0.0000001f)
+	{
+	   	if(fabs(x - y) < epsilon)
+	      return true; 	//they are same
+	    return false; 	//they are not same
+	}
 
 
 private:
@@ -67,8 +76,7 @@ int main()
 	double expectedValue=presentValue*(1+interestRate);
 	IntRateCalculator irc(interestRate);
 	auto futureValue = irc.SinglePeriode(presentValue);
-	//TODO: comparing double -> add sigma !!!
-	assert(futureValue==expectedValue);
+	assert(irc.CompareFloat(futureValue,expectedValue)==true);
 
 	cout << "presentValue.........=" << presentValue << endl;
 	cout << "interestRate.........=" << interestRate << endl;
