@@ -32,7 +32,7 @@ public:
 	//helper function
 	bool CompareFloat(double x, double y, double epsilon = 0.0000001f)
 	{
-	   	if(fabs(x - y) < epsilon)
+	   	if(abs(x - y) < epsilon)
 	      return true; 	//they are same
 	    return false; 	//they are not same
 	}
