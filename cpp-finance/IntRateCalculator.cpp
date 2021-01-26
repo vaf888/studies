@@ -27,7 +27,7 @@ public:
 
 	//~IntRateCalculator();
 
-	double SinglePeriode(double value);
+	double singlePeriod(double value);
 
 	//helper function
 	bool CompareFloat(double x, double y, double epsilon = 0.0000001f)
@@ -55,18 +55,20 @@ IntRateCalculator::IntRateCalculator(const IntRateCalculator& other)
 //-----------------------------------------------------------
 IntRateCalculator& IntRateCalculator::operator=(const IntRateCalculator& other)
 {
-	
-	this->m_rate=other.m_rate;
+	if(this != &other)
+		this->m_rate=other.m_rate;
+
 	return *this;
 }
 
 //-----------------------------------------------------------
-double IntRateCalculator::SinglePeriode(double pValue)
+double IntRateCalculator::singlePeriod(double pValue)
 {
 	auto futureValue = pValue * ( 1 + m_rate );
 	return futureValue;
 }
 
+/*
 //-----------------------------------------------------------
 int main()
 {
@@ -75,11 +77,35 @@ int main()
 	double presentValue=100.0;
 	double expectedValue=presentValue*(1+interestRate);
 	IntRateCalculator irc(interestRate);
-	auto futureValue = irc.SinglePeriode(presentValue);
+	auto futureValue = irc.singlePeriod(presentValue);
 	assert(irc.CompareFloat(futureValue,expectedValue)==true);
 
 	cout << "presentValue.........=" << presentValue << endl;
 	cout << "interestRate.........=" << interestRate << endl;
 	cout << "futureValue..........=" << futureValue << endl;
 
+	retunr 0;
+
+}
+*/
+
+// the main function receives parameters passed to the program
+int main(int argc, const char * argv[])
+{   
+	if (argc != 3)    
+	{        
+		std::cout << "usage: progName <interest rate> <value> " << std::endl;
+	    return 1;    
+	}
+
+	double rate = atof(argv[1]);    
+	double value = atof(argv[2]);
+
+	IntRateCalculator irCalculator(rate);    
+
+	double res = irCalculator.singlePeriod(value);    
+
+	std::cout << " result is " << res << std::endl;    
+
+	return 0;
 }
