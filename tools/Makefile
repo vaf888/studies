@@ -1,0 +1,14 @@
+OBJS =  %1.o
+CFLAG = -g -Wall -Wpedantic -std=c++2a
+CC = g++
+INCLUDE = .
+LIBS =  -lstdc++ -lm  
+
+# What flags should be passed to the linker
+LDFLAGS= -pthread
+
+%1:${OBJ}
+	${CC} ${CFLAGS} ${INCLUDES} -o $@ ${OBJS} ${LIBS}
+
+.cpp.o:
+	${CC} ${CFLAGS} ${INCLUDES} -c $<

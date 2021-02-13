@@ -1,0 +1,22 @@
+INC = -I .
+LDLIBS =
+LDFLAGS = -pthread
+CXXFLAGS = -std=c++17
+BIN_NAME = %1
+BUILD_DIR = .
+SRCS = $(wildcard %1.cpp)
+OBJ = $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
+DEPS = $(obj:%.o=%d)
+
+$(BIN_NAME) : $(BUILD_DIR)/$(BIN_NAME)
+
+$(BUILD_DIR)/$(BIN_NAME) : $(OBJ)
+	mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDLIBS) $(LDFLAGS)
+
+-include $(DEPS)
+
+$(BUILD_DIR)/%.o : %.cpp
+	mkdir -p $(@D)
+	$(CXX) -static $(CXXFLAGS) -MMD -c $< -o $@ $(INC)
+
