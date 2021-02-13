@@ -57,9 +57,8 @@ void do_other_stuff()
 }
 
 //----------------------------------------------------------------------
-int main(int argc, char * argv[])
+int main()
 {
-    
 	cout << ">>>>>main() ..." << endl;
 	
 	std::future<int> the_answer=std::async(find_the_answer_to_ltuae);    	
