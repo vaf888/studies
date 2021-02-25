@@ -1,0 +1,21 @@
+/*
+        demangle executables:
+
+1) put c++ source & assembly side by side:
+	  objdump -drwC test001`
+
+2)        nm a.out | c++filt  -> e.g. nm ../bin/rm-fix-shared-ptr | c++filt
+
+
+        (*)  GNU nm lists the symbols from object files objfile…. If no object files are
+             listed as arguments, nm assumes the file a.out.
+
+        (**) c++filt - demangling:
+                 The c++filt program does the inverse mapping: it decodes (demangles) low-level
+                 names into user-level names so that they can be read.
+
+3) at comp time:
+   gcc -c -g -Wa,-a,-ad foo.c > foo.lst
+
+*/
+
