@@ -92,15 +92,12 @@ public:
 
 	~RecommendationsProcessor() = default;
 
-	void addRecommendation(const std::string &ticker,                                                 
-						   RecommendationType rec, double targetPrice)
-	{    
-		Recommendation r(ticker, rec, targetPrice);    
-		m_recommendations[ticker].push_back(r);
-	}
+	double averageTargetPrice(const std::string &ticker);
+	void addRecommendation(const std::string &ticker,RecommendationType rec, double targetPrice);
 
 	void displayIt()
 	{
+		cout << endl;
 		cout << ">>>>>available recommendations:" << endl;
 		for(auto r:m_recommendations)
 		{
@@ -126,17 +123,73 @@ private:
 
 };
 
+//----------------------------------------------------------------------
+void RecommendationsProcessor::addRecommendation(const std::string &ticker,                                                 
+												 RecommendationType rec, 
+												 double targetPrice)
+{    
+	Recommendation r(ticker, rec, targetPrice);    
+	m_recommendations[ticker].push_back(r);
+}
+
+//----------------------------------------------------------------------
+double RecommendationsProcessor::averageTargetPrice(const std::string &ticker)
+{    
+	if (m_recommendations.find(ticker) == m_recommendations.end())        
+		return 0.0;    
+
+	auto vrec = m_recommendations[ticker];    
+
+	//auto numRecommendations = m_recommendations[ticker].size();
+
+	//std::vector<double> prices;  
+	double totalTickers = 0.0;
+	for(auto rc:vrec)  
+	{
+		totalTickers += rc.getTarget();
+
+	}
+	auto avg1 = totalTickers/m_recommendations[ticker].size();
+	cout << "avg1 - via loop = " << avg1 << endl;
+
+
+	//return std::accumulate(prices.begin(), prices.end(), 0) / prices.size();
+	auto newTotal = 0.0;
+	std::for_each(m_recommendations[ticker].begin(), m_recommendations[ticker].end(), 
+			[&](Recommendation & r)
+			{
+				newTotal += r.getTarget(); 
+			});
+
+	auto avg2 = newTotal/m_recommendations[ticker].size();
+	cout << "avg2 - via for each = " << avg2 << endl;
+
+	return avg1;
+}
 
 //----------------------------------------------------------------------
 int main()
 {
 	cout << __PRETTY_FUNCTION__ << endl;
 
+	cout << "__________________________________________________" << endl;
 	RecommendationsProcessor rp{};
-	rp.addRecommendation(std::string("APPLE"), RecommendationType::BUY, 123.45);
+	rp.addRecommendation(std::string("APPLE"), RecommendationType::BUY, 100.00);
+	rp.addRecommendation(std::string("APPLE"), RecommendationType::BUY, 200.00);
+	rp.addRecommendation(std::string("APPLE"), RecommendationType::BUY, 300.00);
+	rp.addRecommendation(std::string("APPLE"), RecommendationType::BUY, 400.00);
+
 	rp.addRecommendation(std::string("YAHOO"), RecommendationType::BUY, 111.22);
 
 	rp.displayIt();
+
+	cout << "__________________________________________________" << endl;
+	rp.averageTargetPrice(std::string{"APPLE"});
+
+
+
+
+
 
 
 	//desired usage for the Dictionary class:
