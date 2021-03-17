@@ -94,6 +94,9 @@ public:
 	{
 		for(auto el:values)
 			m_prices.emplace_back(el);
+
+		//or
+		//m_prices.insert(m_prices.end(), values.begin(), values.end());
 	}
 
 	void displayIt(std::string label="")

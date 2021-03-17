@@ -121,6 +121,7 @@ void usingLambda()
 	p.displayIt(people, std::string(">>>>>vector AFTER sort:"));
 }
 
+/*
 //----------------------------------------------------------------------
 //lambdas + creating assynchronous pipelines of actions
 void lambdaPipelines()
@@ -130,6 +131,18 @@ void lambdaPipelines()
 		.then()
 		.then()
 }
+*/
+
+//----------------------------------------------------------------------
+//using pointer to function
+int add(int a, int b) { return a + b; }
+int sub(int a, int b)  { return a - b; }
+
+int executeOperation(int (*oper)(int, int), int a, int b)
+{
+	return oper(a, b);
+}
+
 
 //----------------------------------------------------------------------
 int main()
@@ -145,8 +158,20 @@ int main()
 	cout << "________________________________"	<< endl;
 	usingLambda();
 
+	//cout << "________________________________"	<< endl;
+	//processFields(Person{"ccc",24});
+
 	cout << "________________________________"	<< endl;
-	processFields(Person{"ccc",24});
+	cout << "executeOperation(add, 2, 5)=" << executeOperation(add, 2, 5) << endl;
+
+	cout << "________________________________"	<< endl;
+	cout << "executeOperation(sub, 10, 5)=" << executeOperation(sub, 10, 5) << endl;
+
+	cout << "________________________________"	<< endl;
+	cout << "executeOperation via lambda 2*4=" << 
+		executeOperation([](int a, int b){return a*b;}, 2, 4) << endl;
+
+
 
 	return 0;
 }
