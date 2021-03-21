@@ -1,0 +1,90 @@
+Breakpoint 1 at 0x38c4: file Gdb000.cpp, line 73.
+Starting program: /home/antonio/gitrepo/studies/bin/Gdb000 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff3bff700 (LWP 167398)]
+[New Thread 0x7ffff33fe700 (LWP 167399)]
+[New Thread 0x7ffff2bfd700 (LWP 167400)]
+[New Thread 0x7ffff23fc700 (LWP 167401)]
+[New Thread 0x7ffff1bfb700 (LWP 167402)]
+[Switching to Thread 0x7ffff3bff700 (LWP 167398)]
+
+Thread 2 "Gdb000" hit Breakpoint 1, PrintAsciiText (id=0) at Gdb000.cpp:73
+warning: Source file is more recent than executable.
+73	    	<< "I'm a new thread, I'm number " 
+
+Thread 6 (Thread 0x7ffff1bfb700 (LWP 167402)):
+#0  __lll_lock_wait (futex=futex@entry=0x5555555617c0 <colour_mutex>, private=0) at lowlevellock.c:52
+#1  0x00007ffff71680a3 in __GI___pthread_mutex_lock (mutex=0x5555555617c0 <colour_mutex>) at ../nptl/pthread_mutex_lock.c:80
+#2  0x000055555555817e in __gthread_mutex_lock (__mutex=0x5555555617c0 <colour_mutex>) at /usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h:749
+#3  0x0000555555558560 in std::mutex::lock (this=0x5555555617c0 <colour_mutex>) at /usr/include/c++/9/bits/std_mutex.h:100
+#4  0x0000555555557804 in PrintAsciiText (id=4) at Gdb000.cpp:46
+#5  0x000055555555c812 in std::__invoke_impl<void, void (*)(int), int> (__f=@0x603000000110: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:60
+#6  0x000055555555c71a in std::__invoke<void (*)(int), int> (__fn=@0x603000000110: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:95
+#7  0x000055555555c679 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::_M_invoke<0ul, 1ul> (this=0x603000000108) at /usr/include/c++/9/thread:244
+#8  0x000055555555c630 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::operator() (this=0x603000000108) at /usr/include/c++/9/thread:251
+#9  0x000055555555c610 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(int), int> > >::_M_run (this=0x603000000100) at /usr/include/c++/9/thread:195
+#10 0x00007ffff7475d84 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#11 0x00007ffff7165609 in start_thread (arg=<optimized out>) at pthread_create.c:477
+#12 0x00007ffff72b4293 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+
+Thread 5 (Thread 0x7ffff23fc700 (LWP 167401)):
+#0  __lll_lock_wait (futex=futex@entry=0x5555555617c0 <colour_mutex>, private=0) at lowlevellock.c:52
+#1  0x00007ffff71680a3 in __GI___pthread_mutex_lock (mutex=0x5555555617c0 <colour_mutex>) at ../nptl/pthread_mutex_lock.c:80
+#2  0x000055555555817e in __gthread_mutex_lock (__mutex=0x5555555617c0 <colour_mutex>) at /usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h:749
+#3  0x0000555555558560 in std::mutex::lock (this=0x5555555617c0 <colour_mutex>) at /usr/include/c++/9/bits/std_mutex.h:100
+#4  0x0000555555557804 in PrintAsciiText (id=3) at Gdb000.cpp:46
+#5  0x000055555555c812 in std::__invoke_impl<void, void (*)(int), int> (__f=@0x6030000000e0: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:60
+#6  0x000055555555c71a in std::__invoke<void (*)(int), int> (__fn=@0x6030000000e0: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:95
+#7  0x000055555555c679 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::_M_invoke<0ul, 1ul> (this=0x6030000000d8) at /usr/include/c++/9/thread:244
+#8  0x000055555555c630 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::operator() (this=0x6030000000d8) at /usr/include/c++/9/thread:251
+#9  0x000055555555c610 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(int), int> > >::_M_run (this=0x6030000000d0) at /usr/include/c++/9/thread:195
+#10 0x00007ffff7475d84 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#11 0x00007ffff7165609 in start_thread (arg=<optimized out>) at pthread_create.c:477
+#12 0x00007ffff72b4293 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+
+Thread 4 (Thread 0x7ffff2bfd700 (LWP 167400)):
+#0  __lll_lock_wait (futex=futex@entry=0x5555555617c0 <colour_mutex>, private=0) at lowlevellock.c:52
+#1  0x00007ffff71680a3 in __GI___pthread_mutex_lock (mutex=0x5555555617c0 <colour_mutex>) at ../nptl/pthread_mutex_lock.c:80
+#2  0x000055555555817e in __gthread_mutex_lock (__mutex=0x5555555617c0 <colour_mutex>) at /usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h:749
+#3  0x0000555555558560 in std::mutex::lock (this=0x5555555617c0 <colour_mutex>) at /usr/include/c++/9/bits/std_mutex.h:100
+#4  0x0000555555557804 in PrintAsciiText (id=2) at Gdb000.cpp:46
+#5  0x000055555555c812 in std::__invoke_impl<void, void (*)(int), int> (__f=@0x603000000080: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:60
+#6  0x000055555555c71a in std::__invoke<void (*)(int), int> (__fn=@0x603000000080: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:95
+#7  0x000055555555c679 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::_M_invoke<0ul, 1ul> (this=0x603000000078) at /usr/include/c++/9/thread:244
+#8  0x000055555555c630 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::operator() (this=0x603000000078) at /usr/include/c++/9/thread:251
+#9  0x000055555555c610 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(int), int> > >::_M_run (this=0x603000000070) at /usr/include/c++/9/thread:195
+#10 0x00007ffff7475d84 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#11 0x00007ffff7165609 in start_thread (arg=<optimized out>) at pthread_create.c:477
+#12 0x00007ffff72b4293 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+
+Thread 3 (Thread 0x7ffff33fe700 (LWP 167399)):
+#0  __lll_lock_wait (futex=futex@entry=0x5555555617c0 <colour_mutex>, private=0) at lowlevellock.c:52
+#1  0x00007ffff71680a3 in __GI___pthread_mutex_lock (mutex=0x5555555617c0 <colour_mutex>) at ../nptl/pthread_mutex_lock.c:80
+#2  0x000055555555817e in __gthread_mutex_lock (__mutex=0x5555555617c0 <colour_mutex>) at /usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h:749
+#3  0x0000555555558560 in std::mutex::lock (this=0x5555555617c0 <colour_mutex>) at /usr/include/c++/9/bits/std_mutex.h:100
+#4  0x0000555555557804 in PrintAsciiText (id=1) at Gdb000.cpp:46
+#5  0x000055555555c812 in std::__invoke_impl<void, void (*)(int), int> (__f=@0x603000000050: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:60
+#6  0x000055555555c71a in std::__invoke<void (*)(int), int> (__fn=@0x603000000050: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:95
+#7  0x000055555555c679 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::_M_invoke<0ul, 1ul> (this=0x603000000048) at /usr/include/c++/9/thread:244
+#8  0x000055555555c630 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::operator() (this=0x603000000048) at /usr/include/c++/9/thread:251
+#9  0x000055555555c610 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(int), int> > >::_M_run (this=0x603000000040) at /usr/include/c++/9/thread:195
+#10 0x00007ffff7475d84 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#11 0x00007ffff7165609 in start_thread (arg=<optimized out>) at pthread_create.c:477
+#12 0x00007ffff72b4293 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+
+Thread 2 (Thread 0x7ffff3bff700 (LWP 167398)):
+#0  PrintAsciiText (id=0) at Gdb000.cpp:73
+#1  0x000055555555c812 in std::__invoke_impl<void, void (*)(int), int> (__f=@0x603000000020: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:60
+#2  0x000055555555c71a in std::__invoke<void (*)(int), int> (__fn=@0x603000000020: 0x555555557757 <PrintAsciiText(int)>) at /usr/include/c++/9/bits/invoke.h:95
+#3  0x000055555555c679 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::_M_invoke<0ul, 1ul> (this=0x603000000018) at /usr/include/c++/9/thread:244
+#4  0x000055555555c630 in std::thread::_Invoker<std::tuple<void (*)(int), int> >::operator() (this=0x603000000018) at /usr/include/c++/9/thread:251
+#5  0x000055555555c610 in std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(int), int> > >::_M_run (this=0x603000000010) at /usr/include/c++/9/thread:195
+#6  0x00007ffff7475d84 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x00007ffff7165609 in start_thread (arg=<optimized out>) at pthread_create.c:477
+#8  0x00007ffff72b4293 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+
+Thread 1 (Thread 0x7ffff700be40 (LWP 167394)):
+#0  __pthread_clockjoin_ex (threadid=140737282832128, thread_return=0x0, clockid=<optimized out>, abstime=<optimized out>, block=<optimized out>) at pthread_join_common.c:145
+#1  0x00007ffff7475fe7 in std::thread::join() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#2  0x0000555555557dc1 in main () at Gdb000.cpp:101

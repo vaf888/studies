@@ -128,22 +128,18 @@ private:
 //----------------------------------------------------------------------
 bool Date::isLeapYear()
 {
-	/*
-	if (m_year%4 != 0)
-		return false;
 
-	if (m_year%100 != 0)
-		return false;
+	if (m_year % 4 != 0) 
+		return false;        
 
-	if (m_year%400 != 0)
-		return false;
+	if (m_year % 100 != 0) 
+		return true;        
+
+	if (m_year % 400 != 0) 
+		return false;        
 
 	return true;
-	*/
 
-	return ((m_year%4 == 0)   && 
-		    (m_year%100 == 0) && 
-		    (m_year%400 == 0)); 
 }
 
 //----------------------------------------------------------------------
