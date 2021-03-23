@@ -1,2 +1,5 @@
 bin/
 vgcore.*
+csharp\*\bin
+csharp\*\obj
+
