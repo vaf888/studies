@@ -1,5 +1,6 @@
 bin/
 vgcore.*
-csharp\*\bin
-csharp\*\obj
-
+bin/
+obj/
+v16/
+.vs/
