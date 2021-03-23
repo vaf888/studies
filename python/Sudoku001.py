@@ -1,8 +1,10 @@
 import numpy as np
 
-#TODO: FIX THIS - incorrect results !!!
+#TODO: fix this - funny always the same results
 #source: https://www.youtube.com/watch?v=G_UYXzGuqvM&list=RDCMUC9-y-6csu5WGm29I7JiwpnA&start_radio=1&rv=G_UYXzGuqvM&t=0
 
+
+#input grid to be solved
 grid = [[5,3,0,0,7,0,0,0,0],
         [6,0,0,1,9,5,0,0,0],
         [0,9,8,0,0,0,0,6,0],
@@ -13,17 +15,23 @@ grid = [[5,3,0,0,7,0,0,0,0],
         [0,0,0,4,1,9,0,0,5],
         [0,0,0,0,8,0,0,7,9]]
 
-#function to define if in a certain position
-#we can put a number
+#print (">>>>> sudoku gride before solution ...")
+#print (np.matrix(grid))
+
+#function to check if we can put a number n in a
+#grid position x,y - according to sudoku's rules
 def possible(y,x,n):
     global grid
+    
+    if grid[y][x] != 0:
+        return False #Already filled
 
-    # check lines
+    # check if # in line
     for i in range(0,9):
         if grid[y][i] == n:
             return False;
         
-    # check columns
+    # check if # in column columns
     for i in range(0,9):
         if grid[i][x] == n:
             return False;
@@ -35,7 +43,7 @@ def possible(y,x,n):
     #>>> 5.0 // 2
     #   2.0
 
-    # check if number allowed in each one of 3x3 matrix
+    # check if number allowed in the 3x3 sub-grid related to x, y
     x0 = (x//3)*3
     y0 = (y//3)*3
     for i in range(0,3):
@@ -65,27 +73,28 @@ def solve():
 
                         #continue trying to add mor numbers
                         #solving for a smaller set of the problem
-                        solve()
+                        if solve():
+                            return True
 
-                        #this is the backtracking - we
+                        #backtracking - we
                         # try via grid[y][x] = n , then
                         # if i does not work, we remove it
                         # backtrack - via grid[y][x] = 0
                         # to make the position free again
                         #take number off - it was a bad choice
                         grid[y][x] = 0
-                return
-
-    print (">>>>> sudoku gride XXXXXXXXXXXX solution ...")
-    print (np.matrix(grid))
-    return    
+                return False #could not find a solution
+    return True
+    
     
 def main():
-     while(1):
+    while(1):
         print("Solving sudoku - starting ...")
+        print()
         print (">>>>> sudoku gride before solution ...")
         print (np.matrix(grid))
         solve()    
+        print()
         print (">>>>> sudoku gride AFTER solution ...")
         print (np.matrix(grid))
         again = input ("More(Y/N)?")    
