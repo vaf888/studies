@@ -2,7 +2,60 @@
 
 namespace CsharpReview
 {
-    class Topic
+    /*
+        --- variables ---
+        categories: Value types, Reference types, Pointer types
+
+        value types:
+            ..can be assigned a value directly
+            ..They are derived from the class System.ValueType.
+            ..The value types directly contain data. 
+              Some examples are int, char, and float
+
+        reference type:
+            ..do not contain the actual data stored in a variable
+            ..they contain a reference to the variables
+            ..they refer to a memory location
+            ..Using multiple variables, the reference types can refer to a memory location
+              If the data in the memory location is changed by one of the variables, the other variables 
+              automatically reflects this change in value. 
+            ..Example of built-in reference types are: object, dynamic, and string.
+              (*) The Object Type is the ultimate base class for all data types in C# Common Type System (CTS). 
+                  Object is an alias for System.Object class
+
+              (**) Object + convertion:
+                   ..boxing   -> a value type is converted to object type
+                   ..unboxing -> when an object type is converted to a value type, it is called unboxing.
+                   ..E.g.:
+                     the integer variable i is boxed and assigned to object o.
+                     int i = 123;
+                     object o = i;  // boxing
+
+                    ..unboxing:
+                      o = 123;
+                      i = (int)o;  // unboxing
+
+        -string is an alias for global::System.String, and object for global::System.Object
+
+        -nullable types:
+         ..you can assign normal range of values as well as null values
+           e.g.: 
+           you can store any value from -2,147,483,648 to 2,147,483,647 or null in a Nullable<Int32> variable. 
+           you can assign true, false, or null in a Nullable<bool> variable. 
+         ..Syntax for declaring a nullable type:
+           < data_type> ? <variable_name> = null;
+           e.g.: double? num4 = 3.14157;
+        ..The Null Coalescing Operator (??) -> used with the nullable value types and reference types
+          If the value of the first operand is null, then the operator returns the value of the second operand, 
+          otherwise it returns the value of the first operand; e.g.:
+          double? num1 = null;
+          double? num2 = 3.14157;
+          double num3;
+            num3 = num1 ?? 5.34;   // after execution, num3 = 5.34 as num1 IS null !!!
+            num3 = num2 ?? 5.34;   // after execution, num3 = 3.14157, as num2 IS NOT null
+    */
+
+    class General
     {
         public void HelloWorld()
         {
@@ -40,42 +93,6 @@ namespace CsharpReview
             }
         }
 
-        /*
-            --- variables ---
-            categories: Value types, Reference types, Pointer types
-
-            value types:
-                ..can be assigned a value directly
-                ..They are derived from the class System.ValueType.
-                ..The value types directly contain data. 
-                  Some examples are int, char, and float
-
-            reference type:
-                ..do not contain the actual data stored in a variable
-                ..they contain a reference to the variables
-                ..they refer to a memory location
-                ..Using multiple variables, the reference types can refer to a memory location
-                  If the data in the memory location is changed by one of the variables, the other variables 
-                  automatically reflects this change in value. 
-                ..Example of built-in reference types are: object, dynamic, and string.
-                  (*) The Object Type is the ultimate base class for all data types in C# Common Type System (CTS). 
-                      Object is an alias for System.Object class
-
-                  (**) Object + convertion:
-                       ..boxing   -> a value type is converted to object type
-                       ..unboxing -> when an object type is converted to a value type, it is called unboxing.
-                       ..E.g.:
-                         the integer variable i is boxed and assigned to object o.
-                         int i = 123;
-                         object o = i;  // boxing
-
-                        ..unboxing:
-                          o = 123;
-                          i = (int)o;  // unboxing
-
-            -string is an alias for global::System.String, and object for global::System.Object
-        
-        */
 
         public void Variables()
         {
@@ -92,10 +109,9 @@ namespace CsharpReview
             Console.WriteLine(">>>>Type of ii={0}", ii.GetType());
         }
 
-    }//class - end !
+    }//class General - end !
 
     /*
-     
     --- OOP ---
     Procedural programming is about writing procedures or methods 
     that perform operations on the data, while object-oriented 
@@ -150,6 +166,18 @@ namespace CsharpReview
      ..Trivial properties, that include NO logic but ONLY setting and getting a backing field 
        should be converted to auto-implemented properties, yielding cleaner and more readable code.
 
+    -structures:
+     ..In C#, a structure is a value type data type.
+     ..Structures are used to represent a record. 
+       Suppose you want to keep track of your books in a library. 
+       You might want to track the following attributes about each book:
+       Title, Author, Subject, Book ID
+
+    -Class versus Structure:
+    ..Classes and Structures have the following basic differences −
+      classes are reference types and structs are value types
+      structures do not support inheritance
+      structures cannot have default constructor
 
     */
     public class Student
@@ -181,27 +209,27 @@ namespace CsharpReview
         }
     }
 
-
+//-----------------------------------------------------------------------
     class Program
     {
         static void Main(string[] args)
         {
-            Topic t = new Topic();
+            General g = new General();
 
             Console.WriteLine("__________________________________");
-            t.HelloWorld();
+            g.HelloWorld();
 
             //Console.WriteLine("__________________________________");
-            //t.GetUserInput();
+            //g.GetUserInput();
 
             Console.WriteLine("__________________________________");
-            t.TestStrings();
+            g.TestStrings();
 
             Console.WriteLine("__________________________________");
-            t.TestArrays();
+            g.TestArrays();
 
             Console.WriteLine("__________________________________");
-            t.Variables();
+            g.Variables();
 
             Console.WriteLine("__________________________________");
             Student s = new Student();
