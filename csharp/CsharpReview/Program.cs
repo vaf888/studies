@@ -168,6 +168,7 @@ namespace CsharpReview
 
     -structures:
      ..In C#, a structure is a value type data type.
+     ..All structs are implicitly sealed -> To prevent unintended derivation
      ..Structures are used to represent a record. 
        Suppose you want to keep track of your books in a library. 
        You might want to track the following attributes about each book:
@@ -179,18 +180,163 @@ namespace CsharpReview
       structures do not support inheritance
       structures cannot have default constructor
 
+    -Function Overloading
+     ..multiple definitions for the same function name in the same scope. 
+     ..they must differ from each other by:
+       -the types and/or the number of arguments
+       -you CANNOT overload function that DIFFER ONLY BY THE RETURN TYPE.
+
+    -Polymorphism:
+     ..The word polymorphism means having many forms. 
+     ..In object-oriented programming paradigm, polymorphism is often expressed as 'one interface, 
+       multiple functions'.
+     ..Polymorphism can be static or dynamic. 
+     ..static polymorphism:
+       the response (decision which function to use)  to a function is determined 
+        at compile time; e.g. via function overloading
+     ..dynamic polymorphism:
+       -also referred to as run-time or late binding polymorphism because of the decision about which method is 
+        to be called is made at run time
+       -we override the base class method in derived class using inheritance, and this can be 
+        achieved using override and virtual keywords
+        (*) overriding -> using the same method name and signature
+       -Dynamic polymorphism is implemented by abstract classes and virtual functions.
+
+    -Polymorhism (cont.):
+    ..promotes extensibility
+    ..sw that invokes polymorphic behaviour is independent of the
+      the object types to which messages are sent
+    ..New object types that can respond to existing method calls
+      can be incorporated into a system without requiring modification
+      of the polymorphic system logic
+    ..only client code that instantiates new objects must be modified
+      to accomodate new types.
+
+       -Abstract classes in C# 
+        ..are used to provide partial class implementation of an interface. 
+        ..Implementation is completed when a derived class inherits from it. 
+        ..Abstract classes contain abstract methods, which are implemented by the derived class. 
+        ..The derived classes have more specialized functionality.
+    
+       -Abstract classes - rules:
+        ..You cannot create an instance of an abstract class
+        ..You cannot declare an abstract method outside an abstract class
+        ..When a class is declared sealed, it cannot be inherited, abstract classes 
+          cannot be declared sealed.
+
+       -virtual functions:
+        ..When you have a function defined in a class that you want to be implemented in an inherited class(es), 
+          you use virtual functions.
+        ..can be implemented differently in different inherited class, and the call to these functions will be 
+          decided at runtime.
+        ..Dynamic polymorphism is implemented by abstract classes and virtual functions.
+        (*) A base-class variable that contains a reference
+            to a derived-class object and is used to call a
+            VIRTUAL method, actually calls the overriding
+            derived-class version of the method.
+
+        -Abstract Classes and Methods Abstract class: 
+        a) abstract classes
+           ..Abstract base classes are too general to create real objects—they
+             specify only what is common among derived classes.
+             (*) Concrete classes provide the specifics that make it reasonable 
+                 to instantiate objects.
+           ..Intended to be used as a base class
+           ..The abstract modifier indicates that the thing being modified has a missing or 
+             incomplete implementation -> Members marked as abstract, or included in an abstract class, 
+             must be implemented by the derived classes.
+           ..is a restricted class that cannot be used to create objects (instantiated) 
+           ..to access it, it must be inherited from another class.
+           ..Use the abstract modifier in a class declaration to indicate that a class is 
+             intended only to be a base class of other classes, not instantiated on its own
+           ..Sealed:
+             It is not possible to modify an abstract class with the sealed modifier because the 
+             two modifers have opposite meanings:
+             -sealed modifier -> prevents a class from being inherited
+             -abstract modifier -> requires a class to be inherited (+ derived classes implement abstract methods)
+            ..We can use abstract base classes to declare variables that can hold references to objects of 
+              any concrete classes derived from those abstract classes.
+              You can use such variables to manipulate derived‐class objects polymorphically, and to invoke 
+              static methods declared in those abstract base classes.
+
+
+        b)Abstract method: 
+          ..can only be used in an abstract class, and it does not have a body. 
+          ..An abstract method is implicitly a virtual method.
+          ..The body is provided by the derived class (inherited from) - using override keyword !
+          e.g.:
+	        public abstract class Shape
+    	    {...
+        	   public abstract double Area();
+             ...
+            }
+         
+        -Abstract & virtual methods:
+         a) abstract methods:
+            ..do not provide an implementation and force the derived classes to override the method. 
+            ..they have NO CODE inside it, and subclasses HAVE TO override the method
+            ..they must be declared inside an ABSTRACT CLASS
+              e.g.:
+              public abstract double Area();
+
+         b) virtual methods:
+            ..Virtual methods have an implementation and provide the derived classes 
+              with the option of overriding it. Abstract methods do not provide an implementation and force the derived classes to override the method. So, abstract methods have no actual code in them, and subclasses HAVE TO override the method
+        
+        -A sealed class cannot be used as a base class. 
+         For this reason, it cannot also be an abstract class
+
+        -Interfaces:
+         ..An interface defines a contract. 
+         ..Any class or struct that implements that contract must provide an implementation 
+           of the members defined in the interface.
+         ..An interface may not declare instance data such as fields, auto-implemented properties, 
+           or property-like events.
+         ..An interface may define static methods, which must have an implementation
+         ..Beginning with C# 8.0, an interface may define a default implementation for members
+         ..C# because the language doesn't support multiple inheritance of classes -> use Interfaces
+           to include behaviour from multiple sources
+         ..you must use an interface if you want to simulate inheritance for structs, 
+           because they can't actually inherit from another struct or class.
+         ..A class or struct can implement multiple interfaces, but a class can 
+           only inherit from a single class.
+         ..Interface members are public by default
+           -you can explicitly specify accessibility modifiers, such as public, protected, internal, 
+            private, protected internal, or private protected. 
+           -A private member must have a default implementation.
+         ..When a class or struct implements an interface, the class or struct must provide an 
+           implementation for all of the members that the interface declares 
+           but doesn't provide a default implementation for
+         ..A class that implements an interface but does not implement all its members is an abstract class
+           and it must be declared abstract and must contain an abstract declaration for each unimplemented 
+           member of the interface.
+         ..An interface is typically used when unrelated classes need to share common methods,  so that they 
+           can be processed polymorphically
+           You can create an interface that describes the desired functionality, then implement this interface 
+           in any classes requiring that functionality.
+         ..An interface often is used in place of an abstract class when there is no default implementation 
+          to inherit —> that is, no fields and no default method implementations.
+         ..Is a C# construct with all abstract functions(implicitly) and no data members. 
+         ..Its purpose is to establish a contract for services that can be implemented
+           by any concrete derived class.
+           e.g:
+            public interface IDelete
+            {
+                void Delete();
+            }
+
     */
     public class Student
     {
         private int _age;
         //private string _name; -> NO NEED has a auto property (creates anonymous field) !!!
-        
+
         // this is NOT a trivial property (having just simple get/set), has additional logic
         // so, this is OK - generate get + set properties
         public int Age
         {
             get { return _age; }
-            set 
+            set
             {
                 if (value > 0)
                     _age = value;
@@ -207,9 +353,65 @@ namespace CsharpReview
             string res = ">>>>>Student -> name=" + Name + "; Age=" + Age;
             return res;
         }
+
+        //--- static polymorphism - execution decision via overload and at compilation time ---
+        public void print(int val) { Console.WriteLine(">>>>>val=" + val); }
+        public void print(double val) { Console.WriteLine(">>>>>val=" + val); }
     }
 
-//-----------------------------------------------------------------------
+    public abstract class Shape
+    {
+        protected int width, height;
+
+        public Shape(int w = 0, int h = 0)
+        {
+            width = w;
+            height = h;
+        }
+
+        public abstract double Area();
+    }
+
+    public class Rectangle : Shape
+    {
+        public Rectangle(int w, int h) : base(w,h)
+        {
+            Console.WriteLine(">>>>>in Rectangle.Rectangle - width={0} ; height={1}",width, height);
+        }
+
+        public override double Area()
+        {
+            Console.WriteLine(">>>>>in Rectangle.Area - width={0} ; height={1}", width, height);
+
+            double area = (width * height) / 2;
+
+            Console.WriteLine(">>>>>in Rectangle.Area - area={0}", area);
+
+            return area;
+        }
+    }
+
+    //--- Interface---
+    public interface IDelete
+    {
+        void Delete();
+    }
+    public class TextBox : IDelete
+    {
+        public void Delete()
+        {
+            Console.WriteLine(">>>>>in TextBox.Delete() !!!");
+        }
+    }
+    public class Car : IDelete
+    {
+        public void Delete()
+        {
+            Console.WriteLine(">>>>>in Car.Delete() !!!");
+        }
+    }
+
+    //-----------------------------------------------------------------------
     class Program
     {
         static void Main(string[] args)
@@ -237,9 +439,26 @@ namespace CsharpReview
             s.Age = 20;
             Console.WriteLine(s.AsString());
 
+            Console.WriteLine("__________________________________");
+            //using static polymorphism
+            s.print(5);
+            s.print(123.45);
 
-            Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("__________________________________");
+            //dynamic polymorphism
+            Shape sh = new Rectangle(10,20);
+            Console.WriteLine("-> Area={0}", sh.Area());
+
+            Console.WriteLine("__________________________________");
+            //interfaces
+            TextBox tb = new TextBox();
+            IDelete iDel = tb;
+            iDel.Delete();
+
+            Car c = new Car();
+            iDel = c;
+            iDel.Delete();
+
         }
     }
 
