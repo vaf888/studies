@@ -411,6 +411,48 @@ namespace CsharpReview
         }
     }
 
+    /*
+    // SOLID PRINCIPLES:
+        -SOLID is an acronym for 5 important design principles when doing OOP (Object Oriented Programming).
+        -intention of these principles -> to make your code easier to extend, to understand, to maintain.
+
+        Single responsibility principle
+            ..A class should have only one reason to change
+            ..Strive for cohesion
+            ..Do one thing and do it well
+            ..responsibility = ‘reason to change’ -> a class/module should have one, and only one, reason to be changed.
+
+        Open/closed principle
+            ..Classes should be open for extension, but closed for modification
+            ..Design modules that never change
+
+        Liskov substitution principle
+            ..Derived classes must be substitutable/switchable for their base classes
+            ..The base class should not have to know about all of its derivatives
+
+        Interface segregation principle
+            ..Clients should not be forced to depend upon interface that they do not use
+            ..no client should be forced to depend on methods it does not use
+            ..We don't want "fat" or "polluted" interfaces
+              (*) Interfaces that are not specific to a single client leads to unnecessary coupling
+                  between clients that would otherwise be isolated
+            ..Put more simply: Do not add additional functionality to an existing interface by 
+              adding new methods -> Instead, create a new interface and let your class implement 
+              multiple interfaces if needed
+
+        Dependency inversion principle
+            ..Depend on abstractions. Do not depend upon concrete classes
+            ..High-level components should not depend on low-level components, both should depend 
+              on abstractions
+              (*) Abstract classes should not depend upon concrete classes & vice-versa
+            ..is a way to decouple software modules.
+            ..High-level modules should not depend on low-level modules. Both should depend on abstractions.
+            ..Abstractions should not depend on details. Details should depend on abstractions
+            ..we need to use: design pattern known as a dependency inversion pattern -> aka dependency injection.
+              (*) Typically, dependency injection is used simply by ‘injecting’ any dependencies of a class 
+                  through the class’ constructor as an input parameter.
+    */
+
     //-----------------------------------------------------------------------
     class Program
     {
