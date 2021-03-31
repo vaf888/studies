@@ -2,51 +2,61 @@
 using System.Collections.Generic;
 using System.IO;
 using SolidPrinciples.OpenClosePrincipalOK;
+using SolidPrinciples.InterfaceSegregationOK;
 
 namespace SolidPrinciples
 {
-     /*
-        ---SOLID PRINCIPLES---
+    /*
+       ---SOLID PRINCIPLES---
 
-        -SOLID is an acronym for 5 important design principles when doing OOP (Object Oriented Programming).
-        -intention of these principles -> to make your code easier to extend, to understand, to maintain.
+       -SOLID is an acronym for 5 important design principles when doing OOP (Object Oriented Programming).
+       -intention of these principles -> to make your code easier to extend, to understand, to maintain.
 
-        Single responsibility principle
-            ..A class should have only one reason to change
-            ..Strive for cohesion
-            ..Do one thing and do it well
-            ..responsibility = ‘reason to change’ -> a class/module should have one, and only one, reason to be changed.
+       Single responsibility principle
+           ..A class should have only one reason to change
+           ..Strive for cohesion
+           ..Do one thing and do it well
+           ..responsibility = ‘reason to change’ -> a class/module should have one, and only one, reason to be changed.
 
-        Open/closed principle
-            ..Classes should be open for extension, but closed for modification
-            ..Design modules that never change
+       Open/closed principle
+           ..Classes should be open for extension, but closed for modification
+           ..Design modules that never change
 
-        Liskov substitution principle
-            ..Derived classes must be substitutable/switchable for their base classes
-            ..The base class should not have to know about all of its derivatives
+       Liskov substitution principle
+           ..Derived classes must be substitutable/switchable for their base classes
+           ..The base class should not have to know about all of its derivatives
 
-        Interface segregation principle
-            ..Clients should not be forced to depend upon interface that they do not use
-            ..no client should be forced to depend on methods it does not use
-            ..We don't want "fat" or "polluted" interfaces
-              (*) Interfaces that are not specific to a single client leads to unnecessary coupling
-                  between clients that would otherwise be isolated
-            ..Put more simply: Do not add additional functionality to an existing interface by 
-              adding new methods -> Instead, create a new interface and let your class implement 
-              multiple interfaces if needed
+       Interface segregation principle
+           (*) to avoid: Interface Pollution / Fat Interfaces
+           ..Clients should not be forced to depend upon interface that they do not use
+           ..no client should be forced to depend on methods it does not use
+           ..We don't want "fat" or "polluted" interfaces
+             (*) Interfaces that are not specific to a single client leads to unnecessary coupling
+                 between clients that would otherwise be isolated
+           ..Put more simply: Do not add additional functionality to an existing interface by 
+             adding new methods -> Instead, create a new interface and let your class implement 
+             multiple interfaces if needed
+           ..The Interface Segregation Principle states that no client code object should be forced to depend 
+             on methods it does not use. Basically, each code object should only implement what it needs, and 
+             not be required to implement anything else.
+           ..fat interfaces:
+             ...lead to inadvertent couplings between clients that ought to be isolated
+             ...can be segregated(separated), through: multiple inheritance, into abstract 
+                base classes that break unwanted coupling between components.
+                Clients simply mix-in the appropriate interfaces for their activities.
 
-        Dependency inversion principle
-            ..Depend on abstractions. Do not depend upon concrete classes
-            ..High-level components should not depend on low-level components, both should depend 
-              on abstractions
-              (*) Abstract classes should not depend upon concrete classes & vice-versa
-            ..is a way to decouple software modules.
-            ..High-level modules should not depend on low-level modules. Both should depend on abstractions.
-            ..Abstractions should not depend on details. Details should depend on abstractions
-            ..we need to use: design pattern known as a dependency inversion pattern -> aka dependency injection.
-              (*) Typically, dependency injection is used simply by ‘injecting’ any dependencies of a class 
-                  through the class’ constructor as an input parameter.
-    */
+       Dependency inversion principle
+           ..Depend on abstractions. Do not depend upon concrete classes
+           ..High-level components should not depend on low-level components, both should depend 
+             on abstractions
+             (*) Abstract classes should not depend upon concrete classes & vice-versa
+           ..is a way to decouple software modules.
+           ..High-level modules should not depend on low-level modules. Both should depend on abstractions.
+           ..Abstractions should not depend on details. Details should depend on abstractions
+           ..we need to use: design pattern known as a dependency inversion pattern -> aka dependency injection.
+             (*) Typically, dependency injection is used simply by ‘injecting’ any dependencies of a class 
+                 through the class’ constructor as an input parameter.
+   */
 
     //--------------------------------------------------------
     public class Database
@@ -125,6 +135,7 @@ namespace SolidPrinciples
                 log.LogError("An error occured: ", ex.ToString());
             }
         }
+
     }
 
     //--------------------------------------------------------
@@ -239,6 +250,110 @@ namespace SolidPrinciples
         }
     }
 
+    //--- Interface segregation ---
+
+    /*
+        The Interface Segregation Principle states that no client code object should be forced to depend 
+        on methods it does not use. Basically, each code object should only implement what it needs, and 
+        not be required to implement anything else.         
+    */
+    public class DataElement
+    {
+        public void ShowIt()
+        {
+            Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Console.WriteLine(">>>in ShowIt()...");
+        }
+    }
+
+    namespace InterfaceSegregationBAD
+    {
+        interface IDataAccess
+        {
+            void SaveData(DataElement dataElement);
+            IList<DataElement> QueryData(string criteria);
+            IList<DataElement> GetReportData();
+        }
+
+        public abstract class DataAccess : IDataAccess
+        {
+            public abstract void SaveData(DataElement dataElement);
+            public abstract IList<DataElement> QueryData(string criteria);
+            public abstract IList<DataElement> GetReportData();
+        }
+
+        //BAD: method NOT USED from the FAT interface must throw not implemented interface
+        public class ReportDataAccess : DataAccess
+        {
+            override public void SaveData(DataElement dataElement)
+            {
+                Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw new NotImplementedException();
+            }
+
+            override public IList<DataElement> QueryData(string criteria)
+            {
+                Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw new NotImplementedException();
+            }
+
+            override public IList<DataElement> GetReportData()
+            {
+                Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+                //IList<DataElement> dataElements = new List<DataElement> { new DataElement() };
+                return new List<DataElement> { new DataElement() };
+            }
+        }
+    }
+
+    //BETTER SOLUTION: split the interface, so that, each client has a small one, according to its needs
+    namespace InterfaceSegregationOK
+    {
+
+        interface IReportDataAccess
+        {
+            IList<DataElement> GetReportData();
+        }
+
+        interface IDataAccess : IReportDataAccess
+        {
+            void SaveData(DataElement dataElement);
+            IList<DataElement> QueryData(string criteria);
+        }
+
+        public abstract class DataAccess : IDataAccess
+        {
+            public abstract void SaveData(DataElement dataElement);
+            public abstract IList<DataElement> QueryData(string criteria);
+            public abstract IList<DataElement> GetReportData();
+        }
+
+        public abstract class ReportDataAccess : IReportDataAccess
+        {
+            public abstract IList<DataElement> GetReportData();
+        }
+
+        //BAD: method NOT USED from the FAT interface must throw not implemented interface
+        //no need to implement unnecessary methods anymore
+        public class GeneralReportDataAccess : ReportDataAccess
+        {
+            override public IList<DataElement> GetReportData()
+            {
+                Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+                //IList<DataElement> dataElements = new List<DataElement> { new DataElement() };
+                return new List<DataElement> 
+                { 
+                    new DataElement(),
+                    new DataElement(),
+                    new DataElement(),
+                    new DataElement()
+                };
+            }
+        }
+    }
+
     //--------------------------------------------------------
     class Program
     {
@@ -274,6 +389,18 @@ namespace SolidPrinciples
                 post1
             };
             new PostHandler().HandlePosts(posts);
+
+            //Interface segregation
+            Console.WriteLine("__________________________________________________");
+            IReportDataAccess reportDataAccess = new GeneralReportDataAccess();
+            IList<DataElement> l = reportDataAccess.GetReportData();
+            // or
+            //IList<DataElement> l =  new GeneralReportDataAccess().GetReportData();
+
+            foreach (DataElement el in l)
+            {
+                el.ShowIt();
+            }
         }
     }
 }
