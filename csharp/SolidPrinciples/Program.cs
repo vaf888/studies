@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using SolidPrinciples.OpenClosePrincipalOK;
 using SolidPrinciples.InterfaceSegregationOK;
+using SolidPrinciples.DependencyInjectionConstructor;
+using SolidPrinciples.DependencyInjectionViaProperty;
+using SolidPrinciples.DependencyInjectionViaInterface;
 
 namespace SolidPrinciples
 {
@@ -45,7 +48,22 @@ namespace SolidPrinciples
                 base classes that break unwanted coupling between components.
                 Clients simply mix-in the appropriate interfaces for their activities.
 
-       Dependency inversion principle
+       Dependency inversion principle (DIP)
+           ..DIP principle also helps in achieving loose coupling between classes. 
+             It is highly recommended 
+             to use DIP and IoC(*) together in order to achieve loose coupling.
+             IoC = inversion of control principle:
+                   ..goal: recommends the inversion of different kinds of controls in object-oriented design 
+                     to achieve loose coupling between application classes.
+                   ..control -> refers to any additional responsibilities a class has, other than its main responsibility, 
+                                such as control over the flow of an application, or control over the dependent 
+                                object creation and binding (Remember SRP - Single Responsibility Principle).
+                   ..If you want to do TDD (Test Driven Development), then you must use the IoC principle
+                   ..states that objects should not create objects on which they depend to perform
+                     some activity. Instead, they should get those objects from an outside service or 
+                     a container
+           ..DIP suggests that high-level modules should not depend on low level modules. 
+             Both should depend on abstraction
            ..Depend on abstractions. Do not depend upon concrete classes
            ..High-level components should not depend on low-level components, both should depend 
              on abstractions
@@ -56,7 +74,34 @@ namespace SolidPrinciples
            ..we need to use: design pattern known as a dependency inversion pattern -> aka dependency injection.
              (*) Typically, dependency injection is used simply by ‘injecting’ any dependencies of a class 
                  through the class’ constructor as an input parameter.
-   */
+           ..DIP suggests that high-level modules should not depend on low level modules. 
+             Both should depend on abstraction
+    
+           ..Inversion of Control (IoC) and Dependency Injection (DI) -> DI is a subset of IoC
+             -IoC:
+              ..The IoC principle helps in designing loosely coupled classes 
+                which make them testable, maintainable and extensible.
+              ..means that the creation and maintenance of an object is attributed to the
+                container rather than the program. Objects can be obtained using the dependency 
+                lookup or the dependency injection in IoC. 
+              ..means that objects do not create other objects on which they rely to do their work. 
+              ..Instead, they get the objects that they need from an outside service (for example, xml file 
+                or single app service). 
+              ..e.g.: 2 implementations of IoC -> are DI and ServiceLocator.
+             -DI:
+              ..It uses the IoC principle of getting dependent objects is done without 
+                using concrete objects but abstractions (interfaces). 
+              ..This makes all components chain testable, cause higher level component doesn't 
+                depend on lower level component, only from the interface. 
+              ..Mocks implement these interfaces.
+              (*) Dependency Injection (DI) is a design pattern which implements the IoC 
+                  principle to invert the creation of dependent objects
+
+            -IoC Container:
+             ..The IoC container is a framework used to manage automatic dependency injection throughout the 
+               application (no need programmers to do it !)
+             ..There are various IoC Containers for .NET, such as Unity, Ninject, StructureMap, Autofac, etc.
+      */
 
     //--------------------------------------------------------
     public class Database
@@ -354,6 +399,189 @@ namespace SolidPrinciples
         }
     }
 
+    /* IoC - Dependency Invernsion  & Dependency Injection (Design Pattern) */
+
+    // IoC (Principle) ->  control refers to any additional responsibilities a class has, other than its main 
+    //                     responsibility, such as control over the flow of an application, or control over the dependent object creation and binding (Remember SRP - Single Responsibility Principle).
+    //                     To delegate creation of objects to frameworks; VIP for TDD            
+    // Dep. Inversion (principle) -> suggests that high-level modules should not depend on low level modules. Both should depend on abstraction
+    // Dep. Injection (design. pattern) -> implements the IoC principle to invert the creation of dependent objects
+
+    namespace DependencyInjectionConstructor
+    {
+        public interface ICustomerDataAccess
+        {
+            string GetCustomerName(int id);
+        }
+
+        public abstract class CustomerDataAccess : ICustomerDataAccess
+        {
+            public abstract string GetCustomerName(int id);
+        }
+
+        public class GeneralCustomerDataAccess : CustomerDataAccess // SERVICE
+        {
+            override public string GetCustomerName(int id)
+            {
+                Console.WriteLine(">>>>>In GeneralCustomerDataAccess - id={0}", id);
+                return "XXXXX";
+            }
+        }
+
+        public class CustomerBusinessLogic // CLIENT
+        {
+            ICustomerDataAccess _customerDataAccess; 
+            
+            // constructor injection
+            public CustomerBusinessLogic(ICustomerDataAccess custDataAccess) 
+            {
+                _customerDataAccess = custDataAccess; 
+            }
+
+            public string ProcessCustomerData(int id) 
+            {
+                return _customerDataAccess.GetCustomerName(id); 
+            }
+        }
+
+        // injecting the dependency
+        public class CustomerService //INJECTOR
+        { 
+            CustomerBusinessLogic _customerBL; 
+            
+            public CustomerService() 
+            { 
+                _customerBL = new CustomerBusinessLogic(new GeneralCustomerDataAccess()); 
+            } 
+            
+            public string GetCustomerName(int id) 
+            { 
+                return _customerBL.ProcessCustomerData(id); 
+            } 
+        }
+
+    }
+
+    namespace DependencyInjectionViaProperty
+    {
+        public interface ICustomerDataAccess
+        {
+            string GetCustomerName(int id);
+        }
+
+        public abstract class CustomerDataAccess : ICustomerDataAccess
+        {
+            public abstract string GetCustomerName(int id);
+        }
+
+        public class GeneralCustomerDataAccess : CustomerDataAccess
+        {
+            override public string GetCustomerName(int id)
+            {
+                Console.WriteLine(">>>>>In GeneralCustomerDataAccess - id={0}", id);
+                return "XXXXX";
+            }
+        }
+
+        public class CustomerBusinessLogicProperpty
+        {
+            public ICustomerDataAccess DataAccess { get; set; }
+
+            // constructor injection
+            public CustomerBusinessLogicProperpty()
+            {
+            }
+
+            public string ProcessCustomerData(int id)
+            {
+                return DataAccess.GetCustomerName(id);
+            }
+        }
+
+        // setting the property
+        public class CustomerServiceProperty //INJECTOR
+        {
+            CustomerBusinessLogicProperpty _customerBL;
+
+            public CustomerServiceProperty()
+            {
+                _customerBL = new CustomerBusinessLogicProperpty();
+                _customerBL.DataAccess = new GeneralCustomerDataAccess();
+            }
+
+            public string GetCustomerName(int id)
+            {
+                return _customerBL.ProcessCustomerData(id);
+            }
+        }
+    }
+
+    // using Method/Interface
+    namespace DependencyInjectionViaInterface
+    {
+        public interface IDataAccessDependency
+        { 
+            void SetDependency(ICustomerDataAccess customerDataAccess);
+        }
+
+        public interface ICustomerDataAccess
+        {
+            string GetCustomerName(int id);
+        }
+
+        public abstract class CustomerDataAccess : ICustomerDataAccess
+        {
+            public abstract string GetCustomerName(int id);
+        }
+
+        public class GeneralCustomerDataAccess : CustomerDataAccess
+        {
+            override public string GetCustomerName(int id)
+            {
+                Console.WriteLine(">>>>>In GeneralCustomerDataAccess - id={0}", id);
+                return "XXXXX";
+            }
+        }
+
+        public class CustomerBusinessLogicInterface : IDataAccessDependency
+        {
+            ICustomerDataAccess _dataAccess;
+
+            public void SetDependency(ICustomerDataAccess customerDataAccess)
+            {
+                _dataAccess = customerDataAccess;
+            }
+
+            // constructor injection
+            public CustomerBusinessLogicInterface()
+            {
+            }
+
+            public string ProcessCustomerData(int id)
+            {
+                return _dataAccess.GetCustomerName(id);
+            }
+        }
+
+        // using Method/Interface
+        public class CustomerServiceMethod //INJECTOR
+        {
+            CustomerBusinessLogicInterface _customerBL;
+
+            public CustomerServiceMethod()
+            {
+                _customerBL = new CustomerBusinessLogicInterface();
+                ((IDataAccessDependency)_customerBL).SetDependency(new GeneralCustomerDataAccess());
+            }
+
+            public string GetCustomerName(int id)
+            {
+                return _customerBL.ProcessCustomerData(id);
+            }
+        }
+    }
+
+
     //--------------------------------------------------------
     class Program
     {
@@ -401,6 +629,21 @@ namespace SolidPrinciples
             {
                 el.ShowIt();
             }
+
+            //Dependency injection - via constructor
+            Console.WriteLine("__________________________________________________");
+            CustomerService cs = new CustomerService();
+            Console.WriteLine(">>>>>cs.ProcessCustomerData(1)={0}",cs.GetCustomerName(1));
+
+            //Dependency injection - via property
+            Console.WriteLine("__________________________________________________");
+            CustomerServiceProperty csp = new CustomerServiceProperty();
+            Console.WriteLine(">>>>>csp.ProcessCustomerData(1)={0}", csp.GetCustomerName(1));
+
+            //Dependency injection - via Method/Interface
+            Console.WriteLine("__________________________________________________");
+            CustomerServiceMethod csm = new CustomerServiceMethod();
+            Console.WriteLine(">>>>>csm.ProcessCustomerData(1)={0}", csm.GetCustomerName(1));
         }
     }
 }
