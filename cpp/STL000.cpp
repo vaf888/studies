@@ -10,12 +10,15 @@
 #include <algorithm>
 #include <typeinfo>
 #include <iterator>
+#include <random>	//rnadom_device
 
 
 using namespace std;
 
 /*
-	We want to sort a vector of persons, by age:
+	study sequence based on video:
+	https://www.youtube.com/watch?v=2olsGf6JIkU&t=375s
+	"105 STL Algorithms in Less Than an Hour”
 */
 
 //----------------------------------------------------------------------
@@ -252,13 +255,40 @@ void rotateIt()
 void ramdomIt()
 {
 
+	cout << endl;
+	cout << "________________________________" << endl;	
+	cout << __PRETTY_FUNCTION__ << endl;
+
 	std::vector<int> v{1,2,3,4,5,6,7,8,9};
 
-	// 
+	cout << ">>>>>random_shuffle + def. func - BEFORE" << endl;
+	std::copy(v.begin(), v.end(), std::ostream_iterator<int>(std::cout," "));
+
+	std::random_shuffle(v.begin(), v.end());
+	cout << "\n>>>>>random_shuffle + def. func - AFTER" << endl;
+	std::copy(v.begin(), v.end(), std::ostream_iterator<int>(std::cout," "));
+	cout << endl;
+
+	//using random func. 
+	std::random_device rd;
+	std::mt19937 g(rd());
+
+	std::vector<int> v2{1,2,3,4,5,6,7,8,9};
+
+	cout << "\n>>>>>random_shuffle + rand. func - BEFORE" << endl;
+	std::copy(v2.begin(), v2.end(), std::ostream_iterator<int>(std::cout," "));
+
+	std::shuffle(v2.begin(), v2.end(), g);
+	cout << "\n>>>>>random_shuffle + rand. func. - AFTER" << endl;
+	std::copy(v2.begin(), v2.end(), std::ostream_iterator<int>(std::cout," "));
+	cout << endl;
 
 }
 
-
+//TODOs:
+// count
+// accumulate transforme reduce
+// etc ...23:24 min
 
 //----------------------------------------------------------------------
 int main()
@@ -276,6 +306,8 @@ int main()
 	reverseIt("ABCD");
 
 	rotateIt();
+
+	ramdomIt();
 
 	return 0;
 }
