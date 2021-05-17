@@ -11,7 +11,15 @@
 #include <typeinfo>
 #include <iterator>
 #include <random>	//rnadom_device
+#include <numeric>	//std::reduce
+#include <chrono>   //time
+#include <iomanip>  // set precision
 
+//VIP: to use exec. policies (uses TBB parallel lib)
+//include execution
+//install TBB lib
+//link with lib -> -ltbb
+#include <execution> // exec. policies
 
 using namespace std;
 
@@ -285,10 +293,130 @@ void ramdomIt()
 
 }
 
-//TODOs:
-// count
-// accumulate transforme reduce
-// etc ...23:24 min
+//----------------------------------------------------------------------
+void countIt()
+{
+
+	cout << endl;
+	cout << "________________________________" << endl;	
+	cout << __PRETTY_FUNCTION__ << endl;
+
+	constexpr std::array v={ 1, 2, 3, 4, 4, 3, 7, 8, 9, 10 };
+
+	cout << "\n>>>>>array=";
+	std::copy(v.begin(), v.end(), ostream_iterator<int>(std::cout," "));
+
+	
+	int numItems = std::count(v.begin(), v.end(), 4);
+	cout << "\n>>>>>num items 4=" << numItems << endl;
+	assert(2 == numItems);
+
+
+	numItems = std::count_if(v.begin(), v.end(), 
+		[](int x){ return x%2==0;});
+
+	cout << "\n>>>>>num items divisible by 2=" << numItems << endl;
+
+	assert(5 == numItems);	
+
+
+	//distance
+	int dist = std::distance(v.begin(), v.end());
+	cout << ">>>>>distance from 1 to 10=" << dist << endl;
+	assert(10 == dist);
+
+	dist = std::distance(v.begin()+6, v.end());
+	cout << ">>>>>distance from 7 to 10=" << dist << endl;
+	assert(4 == dist);
+
+}
+
+//----------------------------------------------------------------------
+// reduce (c++17) - similar to accumulate but allows parallel polices
+
+auto eval = [](auto fun) 
+	{
+        const auto t1 = std::chrono::high_resolution_clock::now();
+        const auto [name, result] = fun();
+        const auto t2 = std::chrono::high_resolution_clock::now();
+        const std::chrono::duration<double, std::milli> ms = t2 - t1;
+        std::cout << std::fixed << std::setprecision(1) << name << " result "
+                  << result << " took " << ms.count() << " ms\n";
+    };
+
+void reduceIt()
+{
+	cout << endl;
+	cout << "________________________________" << endl;	
+	cout << __PRETTY_FUNCTION__ << endl;
+
+	constexpr std::array v={ 1, 2, 3, 4, 4, 3, 7, 8, 9, 10 };
+
+	auto res = std::reduce(v.begin(), v.end());
+	cout << "\n>>>>>reduce res=" << res << endl;
+	assert(51 == res);
+
+	res = std::reduce(v.begin(), v.end(), 10);
+	cout << "\n>>>>>reduce + inti val 10 - res=" << res << endl;
+	assert(61 == res);
+
+	res = std::reduce(v.begin(), v.end(), 10);
+	cout << "\n>>>>>reduce + inti val 10 - res=" << res << endl;
+	assert(61 == res);
+
+	cout << endl;
+	eval([&v] { return std::pair
+				{
+					"std::reduce(v.begin(), v.end(), 10)",
+					std::reduce(v.begin(), v.end(), 10)
+			    };
+			   }
+		);
+
+		cout << endl;
+		res = std::reduce( std::execution::par, v.begin(), v.end());
+		cout << "\n>>>>>reduce res + parallel=" << res << endl;
+		assert(51 == res);
+}
+
+
+//----------------------------------------------------------------------
+void transformIt()
+{
+	/*
+		std::transform applies the given function to a range and 
+		stores the result in another range, keeping the original 
+		elements order and beginning at d_first.
+	*/
+
+	cout << endl;
+	cout << "________________________________" << endl;	
+	cout << __PRETTY_FUNCTION__ << endl;
+
+	std::vector v={ 1, 2, 3, 4, 4, 3, 7, 8, 9, 10 };
+	std::vector<int> res{};
+	cout << "before transform v=";
+	std::copy(v.begin(),v.end(),ostream_iterator<int>(std::cout, " "));
+	std::transform(v.begin(),v.end(),std::back_inserter(res),[](int a){return a *=5;});
+	cout << "\nafter transform X 5 -> v=";
+	std::copy(res.begin(),res.end(),ostream_iterator<int>(std::cout, " "));
+
+}
+
+
+void testFor()
+{
+	cout << __PRETTY_FUNCTION__ << endl;
+
+	//size_t sz = buf->size();
+	size_t sz = 5;	
+
+	while ( --sz >= 0 )
+	{
+		cout << "size=" << sz << endl;
+	}
+}
+//>>>>>>>>>>>>>next 26:22 any_of
 
 //----------------------------------------------------------------------
 int main()
@@ -308,6 +436,14 @@ int main()
 	rotateIt();
 
 	ramdomIt();
+
+	countIt();
+
+	reduceIt();
+
+	transformIt();
+
+	testFor();
 
 	return 0;
 }
