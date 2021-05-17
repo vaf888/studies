@@ -1,8 +1,9 @@
 bin/
-vgcore.*
+vgcore*.*
 bin/
 obj/
 v16/
 .vs/
 core
+
 
